@@ -14,11 +14,11 @@ var (
 	helloWorldClient proto1.HelloWorldService
 )
 
-// Error 错误结构体
-type Error struct {
-	Code   string `json:"code"`
-	Detail string `json:"detail"`
-}
+//// Error 错误结构体
+//type Error struct {
+//	Code   string `json:"code"`
+//	Detail string `json:"detail"`
+//}
 
 func Init() {
 	//使用etcd注册
@@ -35,7 +35,7 @@ func Init() {
 func registryOptions(ops *registry.Options) {
 	//etcdCfg := config.GetEtcdConfig()
 	//ops.Addrs = []string{fmt.Sprintf("%s:%d", etcdCfg.GetHost(), etcdCfg.GetPort())}
-	ops.Addrs = []string{fmt.Sprintf("%s:%d", "127.0.0.1", 2379)}
+	ops.Addrs = []string{fmt.Sprintf("%s:%d", "127.0.0.1", 2379)} //todo 配置代码
 
 }
 
