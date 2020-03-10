@@ -13,6 +13,8 @@ import (
 
 func main() {
 
+	//Run pubsub client(pub)
+
 	micReg := etcd.NewRegistry(registryOptions)
 
 	// New Service
