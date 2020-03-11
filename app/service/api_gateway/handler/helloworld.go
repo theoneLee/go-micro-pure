@@ -7,7 +7,7 @@ import (
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
-	proto1 "test.lee/hello_world/proto"
+	proto1 "test.lee/common/proto/hello_world"
 )
 
 var (

@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
+	proto "test.lee/common/proto/hello_world"
 	"test.lee/hello_world/model"
-	proto "test.lee/hello_world/proto"
 )
 
 var dao model.Dao
@@ -20,7 +20,8 @@ func (Service) Echo(ctx context.Context, req *proto.EchoRequest, resp *proto.Ech
 		}
 		return nil
 	}
-
+	//send message to mq
+	SendEchoEvent("example.topic.pubsub.1", Pub)
 	resp.User = user
 	resp.Success = true
 	return nil

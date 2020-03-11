@@ -7,14 +7,11 @@ import (
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
+	s "test.lee/common/proto/hello_world"
 	"test.lee/hello_world/handler"
-	s "test.lee/hello_world/proto"
 )
 
 func main() {
-
-	//Run pubsub client(pub)
-
 	micReg := etcd.NewRegistry(registryOptions)
 
 	// New Service
@@ -34,6 +31,28 @@ func main() {
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
+
+	//Run pubsub client(pub)
+	// create a service
+	pubService := micro.NewService(
+		micro.Name("go.micro.cli.pubsub"),
+		micro.Registry(micReg),
+	)
+	// parse command line
+	pubService.Init()
+
+	// create publisher
+	handler.Pub =micro.NewPublisher("example.topic.pubsub.1", pubService.Client())// todo 改为使用Init函数。且获取Pub使用getter
+	pub1 := micro.NewPublisher("example.topic.pubsub.1", pubService.Client())
+	pub2 := micro.NewPublisher("example.topic.pubsub.2", pubService.Client())
+
+	// pub to topic 1
+	go handler.SendEv("example.topic.pubsub.1", pub1)
+	// pub to topic 2
+	go handler.SendEv("example.topic.pubsub.2", pub2)
+
+	// block forever
+	select {}
 }
 
 func registryOptions(ops *registry.Options) {

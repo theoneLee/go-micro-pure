@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/metadata"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	"github.com/micro/go-micro/v2/server"
 	"github.com/micro/go-micro/v2/util/log"
-	proto "test.lee/pub_sub/proto"
+	proto "test.lee/common/proto/pub_sub"
 )
 
 // All methods of Sub will be executed when
@@ -30,9 +33,12 @@ func subEv(ctx context.Context, event *proto.Event) error {
 }
 
 func main() {
+	micReg := etcd.NewRegistry(registryOptions)
+
 	// create a service
 	service := micro.NewService(
 		micro.Name("go.micro.srv.pubsub"),
+		micro.Registry(micReg),
 	)
 	// parse command line
 	service.Init()
@@ -46,4 +52,11 @@ func main() {
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func registryOptions(ops *registry.Options) {
+	//etcdCfg := config.GetEtcdConfig()
+	//ops.Addrs = []string{fmt.Sprintf("%s:%d", etcdCfg.GetHost(), etcdCfg.GetPort())}
+	ops.Addrs = []string{fmt.Sprintf("%s:%d", "127.0.0.1", 2379)} //todo 配置代码
+
 }
