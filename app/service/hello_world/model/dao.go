@@ -1,7 +1,7 @@
 package model
 
 import (
-	proto "test.lee/hello_world/proto"
+	proto "test.lee/common/proto/hello_world"
 )
 
 type Dao struct {

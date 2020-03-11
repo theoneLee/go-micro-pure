@@ -12,17 +12,23 @@ import (
 	proto "test.lee/common/proto/pub_sub"
 )
 
-// All methods of Sub will be executed when
-// a message is received
+// todo: All methods of Sub will be executed when a message is received
 type Sub struct{}
 
 // Method can be of any name
 func (s *Sub) Process(ctx context.Context, event *proto.Event) error {
 	md, _ := metadata.FromContext(ctx)
-	log.Logf("[pubsub.1] Received event %+v with metadata %+v\n", event, md)
+	log.Logf("[pubsub.1 process1] Received event %+v with metadata %+v\n", event, md)
 	// do something with event
 	return nil
 }
+
+//func (s *Sub) Process2(ctx context.Context, event *proto.Event) error {
+//	md, _ := metadata.FromContext(ctx)
+//	log.Logf("[pubsub.1 process2] Received event %+v with metadata %+v\n", event, md)
+//	// do something with event
+//	return nil
+//}
 
 // Alternatively a function can be used
 func subEv(ctx context.Context, event *proto.Event) error {
@@ -43,7 +49,7 @@ func main() {
 	// parse command line
 	service.Init()
 
-	// register subscriber
+	// register subscriber //TODO 在开启多个pub_sub实例情况下，client pub一个消息，这多个pub_sub实例都能获得该消息。而下面的只有一个实例能拿到消息。
 	micro.RegisterSubscriber("example.topic.pubsub.1", service.Server(), new(Sub))
 
 	// register subscriber with queue, each message is delivered to a unique subscriber

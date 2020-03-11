@@ -12,6 +12,10 @@ import (
 )
 
 func main() {
+
+	//Run pubsub client(pub)
+	Init()
+
 	micReg := etcd.NewRegistry(registryOptions)
 
 	// New Service
@@ -32,7 +36,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//Run pubsub client(pub)
+	//Init() //todo 上面service.Run()会进入阻塞。导致不会调用这里的Init()
+}
+
+func Init() {
+	micReg := etcd.NewRegistry(registryOptions)
 	// create a service
 	pubService := micro.NewService(
 		micro.Name("go.micro.cli.pubsub"),
@@ -42,17 +50,20 @@ func main() {
 	pubService.Init()
 
 	// create publisher
-	handler.Pub =micro.NewPublisher("example.topic.pubsub.1", pubService.Client())// todo 改为使用Init函数。且获取Pub使用getter
+	handler.Pub = micro.NewPublisher("example.topic.pubsub.1", pubService.Client()) // todo 改为使用Init函数。且获取Pub使用getter
 	pub1 := micro.NewPublisher("example.topic.pubsub.1", pubService.Client())
 	pub2 := micro.NewPublisher("example.topic.pubsub.2", pubService.Client())
 
 	// pub to topic 1
 	go handler.SendEv("example.topic.pubsub.1", pub1)
+	go handler.SendEv("example.topic.pubsub.1", pub1)
 	// pub to topic 2
 	go handler.SendEv("example.topic.pubsub.2", pub2)
+	go handler.SendEv("example.topic.pubsub.2", pub2)
+	go handler.SendEv("example.topic.pubsub.2", pub2)
 
-	// block forever
-	select {}
+	//// block forever
+	//select {}
 }
 
 func registryOptions(ops *registry.Options) {
