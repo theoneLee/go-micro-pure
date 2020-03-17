@@ -1,0 +1,11 @@
+mysql:
+  database1:
+    DbUser: root
+    DbPassword: 123456
+    DbHost: 10.0.0.201:3306
+    DbName:  test_java_user
+
+
+mongo:
+  database1:
+    url:'mongodb://root:123456@10.0.0.201:27017/'
