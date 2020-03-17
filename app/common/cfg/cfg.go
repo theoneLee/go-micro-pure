@@ -28,6 +28,7 @@ type DbInfo struct {
 
 //InitConfig :
 func InitConfig(path string) {
+	Config = &Conf{}
 	// 加载配置文件
 	err := config.Load(file.NewSource(
 		file.WithPath(path),
@@ -36,10 +37,12 @@ func InitConfig(path string) {
 	if err != nil {
 		panic(err)
 	}
-
+	//var dbInfo DbInfo
 	if err := config.Get("mysql", "database1").Scan(&Config.DbInfo); err != nil {
 		panic(err)
 	}
+	//fmt.Println(Config.DbInfo)
+	//Config.DbInfo = &dbInfo
 
 	if err := config.Get("mongo", "database1").Scan(&Config.MongoInfo); err != nil {
 		panic(err)
