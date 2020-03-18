@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package user;
+// cd /Users/edz/IdeaProjects/go-micro-pure/app/common/proto/user
+// protoc --proto_path=. --go_out=. --micro_out=. user.proto
+
+
+service UserAndNews{
+    rpc SaveUser(UserReq) returns (UserResp){
+    }
+
+    rpc GetUser(UserReq) returns (UserResp){
+    }
+
+    rpc SaveNotice(NoticeReq) returns (NoticeResp){
+    }
+
+
+}
+
+message UserReq{
+   user user = 1;
+}
+
+message UserResp{
+    bool success = 1;
+    Error error =2;
+    user user =3;
+}
+
+message Error{
+    int32 code=1;
+    string detail=2;
+}
+
+message user{
+    string id = 1;
+    string userName = 2;
+    repeated notice noticeList = 3;//notice list
+//    map<string, string >
+}
+
+message notice{
+    string id = 1;
+    string category = 2;
+    string title = 3;
+    string content = 4;
+    string fromUserId = 5;
+    string userId = 6;
+}
+
+message NoticeReq{
+    notice notice = 1;
+}
+
+message NoticeResp{
+    bool success =1;
+    Error error =2;
+    notice notice =3;
+}
+
+
