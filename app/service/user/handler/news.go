@@ -30,7 +30,7 @@ func (s Service) SaveUser(ctx context.Context, req *user.UserReq, resp *user.Use
 	}
 
 	// todo 从user打包成protobuf定义的结构,但是这样做也太复杂了吧？怎么处理这个？https://blog.csdn.net/jxust_tj/article/details/84754345
-	// todo 可以尝试编辑protobuf生成的model的tag？然后dao操作的model是proto生成的？https://github.com/gogo/protobuf/blob/master/extensions.md#more-serialization-formats
+	// todo 可以尝试编辑protobuf生成的model的tag？然后dao操作的model是proto生成的？https://github.com/gogo/protobuf/blob/master/extensions.md#more-serialization-formats 或者 https://github.com/favadi/protoc-go-inject-tag
 	// todo 但是实际上采取这个方案有些问题。因为协议上的字段定义有可能和自己实体字段不一致的。为了少些一遍实体代码就考虑共用也不见的好。
 	// todo 顺便一提，这块rpcx采用的messagepack比proto好很多，就写代码的流畅性来说。
 	//resp.User=&userW //编译错误
