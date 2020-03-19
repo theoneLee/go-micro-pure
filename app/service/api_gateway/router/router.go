@@ -11,5 +11,7 @@ func InitRouter() *gin.Engine {
 	r.GET("/print", handler.Print)
 	r.GET("/echo", handler.Echo)
 
+	r.GET("/SaveUser", handler.SaveUser)
+
 	return r
 }

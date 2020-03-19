@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"github.com/micro/go-micro/v2/util/log"
+	"github.com/pborman/uuid"
 	"test.lee/common/proto/user"
 	"test.lee/user/model"
 )
@@ -14,10 +16,12 @@ type Service struct {
 func (s Service) SaveUser(ctx context.Context, req *user.UserReq, resp *user.UserResp) error {
 	//从req包装一个user
 	userW := model.User{
+		ID:       uuid.NewUUID().String(),
 		UserName: req.User.UserName,
 		//Password:req.User.P
-
+		Password: req.User.UserName,
 	}
+	log.Info(userW)
 	dao.SaveUser(userW)
 	var err error
 	if err != nil {

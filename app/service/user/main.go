@@ -9,6 +9,7 @@ import (
 	c "test.lee/common/cfg"
 	s "test.lee/common/proto/user"
 	"test.lee/user/handler"
+	"test.lee/user/model"
 	"test.lee/user/model/util"
 )
 
@@ -17,6 +18,8 @@ func main() {
 	c.InitConfig("./cfg/config.yml")
 
 	util.InitMysql()
+	//自动迁移 只会 创建表、缺失的列、缺失的索引， 不会 更改现有列的类型或删除未使用的列，以此来保护您的数据。
+	util.GetDb().AutoMigrate(&model.User{}, &model.News{})
 
 	micReg := etcd.NewRegistry(registryOptions)
 
