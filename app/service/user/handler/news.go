@@ -44,7 +44,7 @@ func (s Service) SaveUser(ctx context.Context, req *user.UserReq, resp *user.Use
 }
 
 func packUser(userW model.User) *user.User {
-	return nil
+	return &user.User{UserName: userW.UserName, Id: userW.ID}
 }
 
 func (s Service) GetUser(context.Context, *user.UserReq, *user.UserResp) error {

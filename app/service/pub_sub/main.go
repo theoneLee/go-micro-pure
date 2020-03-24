@@ -55,6 +55,16 @@ func main() {
 	// register subscriber with queue, each message is delivered to a unique subscriber
 	micro.RegisterSubscriber("example.topic.pubsub.2", service.Server(), subEv, server.SubscriberQueue("queue.pubsub"))
 
+	//ss,_ :=broker.DefaultBroker.Subscribe("example.topic.pubsub.3", Sub)
+	//ss.Unsubscribe()
+	//broker.Broker().Subscribe()
+	////sub:=service.Server().NewSubscriber("example.topic.pubsub.3", new(Sub))
+	////service.Server().Subscribe(sub)
+	//go func() {
+	//	time.Sleep(10*time.Second)
+	//
+	//}()
+
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
