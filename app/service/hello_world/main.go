@@ -2,6 +2,12 @@ package main
 
 import (
 	"fmt"
+	p "github.com/golang/protobuf/proto"
+	"github.com/nats-io/stan.go"
+	"github.com/pborman/uuid"
+	proto "test.lee/common/proto/pub_sub"
+	"time"
+
 	//"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
@@ -15,6 +21,9 @@ func main() {
 
 	//Run pubsub client(pub)
 	Init()
+
+	//自引入的nats消息队列
+	InitNats()
 
 	micReg := etcd.NewRegistry(registryOptions)
 
@@ -37,6 +46,27 @@ func main() {
 	}
 
 	//Init() //todo 上面service.Run()会进入阻塞。导致不会调用这里的Init()
+}
+
+func InitNats() {
+	clusterID := "test-cluster"                  //需要和sub方一致
+	clientID := "stan-sub-demo2"                 //需要每个client都唯一
+	sc, err := stan.Connect(clusterID, clientID) //todo 会向clusterID一致的sub方的subject为foo，投递消息
+	if err != nil {
+		panic(err)
+	}
+	subject := "foo"
+	sc.Publish(subject, []byte("Hello World in rpc")) // does not return until an ack has been received from NATS Streaming
+	ev := &proto.Event{
+		Id:        uuid.NewUUID().String(),
+		Timestamp: time.Now().Unix(),
+		Message:   fmt.Sprintf("Messaging you all day on %s", subject),
+	}
+	bytes, _ := p.Marshal(ev) //自己序列化结构体，再用nats发布,nats的sub接受后，再使用proto反序列化
+	sc.Publish("model", bytes)
+
+	// Close connection
+	sc.Close()
 }
 
 func Init() {

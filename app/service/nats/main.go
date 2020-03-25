@@ -15,6 +15,9 @@ package main
 
 import (
 	"fmt"
+	p "github.com/golang/protobuf/proto"
+	proto "test.lee/common/proto/pub_sub"
+
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
 	"time"
@@ -196,6 +199,7 @@ func demo() {
 	// Simple Async Subscriber
 	sub, _ := sc.Subscribe("foo", func(m *stan.Msg) {
 		fmt.Printf("Received a message: %s\n", string(m.Data))
+		//todo process message
 	})
 
 	// Simple Synchronous Publisher
@@ -239,9 +243,37 @@ func demo() {
 }
 
 func main() {
-	demo()
+	//demo()
 
 	//todo 这里可以subscribe所有的subject/topic，拿到消息后直接通过proto定义的rpc方法来消费该消息即可。当然也可以选择不再细分，将消费消息的函数直接内嵌到这个项目上
 
 	//todo 对于调用方（pub），不需要在包装一次，直接读取该项目的配置，然后构造一个nats/stan 的Conn即可。
+
+	clusterID := "test-cluster"
+	clientID := "stan-sub-demo1"
+
+	sc, err := stan.Connect(clusterID, clientID)
+	if err != nil {
+		panic(err)
+	}
+	// Simple Async Subscriber
+	sub, _ := sc.Subscribe("foo", func(m *stan.Msg) {
+		fmt.Printf("Received a message: %s\n", string(m.Data))
+		//todo process message
+	})
+
+	sc.Subscribe("model", func(m *stan.Msg) {
+		ev := &proto.Event{}
+		p.Unmarshal(m.Data, ev) //自己序列化结构体，再用nats发布,nats的sub接受后，再使用proto反序列化
+		fmt.Printf("Received a model message: %s\n", ev.Message)
+		//todo process message
+	})
+
+	// block forever
+	select {}
+
+	// Unsubscribe
+	sub.Unsubscribe()
+	// Close connection
+	sc.Close()
 }
